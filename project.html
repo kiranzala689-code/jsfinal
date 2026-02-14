@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+          body{
+        width: 100%;
+        height: auto;
+        text-align: center;
+        margin: 30px;
+        font-family: sans-serif,system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        margin: 0;
+        padding: 0;
+    background-color: rgb(231, 234, 236);
+    }
+      form{
+        /* border: 1px solid; */
+        width: 40%;
+        height: 300px;
+        margin: auto;
+        margin-top: 70px;
+        padding: 80px 10px;
+        border-radius: 20px;
+        background-color: rgb(195, 197, 199);
+      }
+      input{
+        width: 60%;
+        height: 36px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: center;
+        
+      }
+      input::placeholder{
+        color: black;
+      }
+   #sub{
+    width: 20%;
+    margin-top: 40px;
+   }
+    #con div{
+        height: 400px;
+        /* border: 1px solid #b99d9d; */
+        padding: 15px;
+        text-align: center;
+        border-radius: 10px;
+        background-color: rgb(248, 249, 250);     
+    }
+    </style>
+</head>
+<body>
+     <form action="">
+         <input type="text" name="image" id="image" placeholder="Enter img url"><br><br>
+         <input type="text" name="category" id="category" placeholder="Enter category"><br><br>
+        <input type="name" name="name" id="name" placeholder="Enter Product Name"><br><br>
+        <input type="price" name="price" id="price" placeholder="Enter Price"><br><br>
+        <input type="qty" name="qty" id="qty" placeholder="Enter Quantity"><br><br>
+        <input type="submit" id="sub"  >
+     </form>
+     <script>
+        let arr = JSON.parse(localStorage.getItem("data")) || []
+
+    
+            document.querySelector("form").addEventListener("submit",(e)=>{
+                e.preventDefault()
+                let image=document.querySelector("#image").value
+                let cat=document.querySelector("#category").value
+                let name=document.querySelector("#name").value
+                let price=document.querySelector("#price").value 
+                let qty=document.querySelector("#qty").value 
+     let obj={image,cat,name,price,qty}
+     arr.push(obj)
+     localStorage.setItem("data",JSON.stringify(arr))
+     window.location.href="pro2.html"
+            })
+          
+
+     </script>
+</body>
+</html>

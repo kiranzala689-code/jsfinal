@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        width: 100%;
+        height: auto;
+        font-family: sans-serif,system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        margin: 0;
+        padding: 0;
+    background-color: rgb(231, 234, 236);
+    }
+    #controls{
+        display: flex;
+        justify-content: space-evenly;
+        /* gap: 40px; */
+        background-color: rgb(193, 197, 196);
+        padding:10px 0px;
+    
+    }
+    #search{
+        width: 30%;
+        height: 36px;
+        text-align: center;
+        border-radius: 10px;
+        border: none;
+        margin-top: 20px;
+    }
+    #search::placeholder{
+            font-size: 20px;
+        }
+        #sort{
+            width: 10%;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+             margin-top: 20px;
+        }
+       
+    #editbox{
+display:none;
+ border:1px solid black;
+padding:10px; 
+ width:250px;
+    }
+    #con{
+        display: grid;
+        grid-template-columns:repeat(3,1fr);
+     gap: 20px;
+        
+    }
+    #con div{
+        height: auto;
+        /* border: 1px solid #b99d9d; */
+        padding: 15px;
+        text-align: center;
+        border-radius: 10px;
+        background-color: rgb(248, 249, 250);     
+    }
+    .red{
+        margin-right: 10px;
+        border: none;
+        width: 80px;
+        background-color: rgb(10, 8, 6);
+        height: 30px;
+        color: rgb(241, 240, 237);
+        border-radius: 8px;
+    }
+    .color{
+border: none;
+        width: 50px;
+        background-color: rgb(10, 8, 6);
+        height: 30px;
+        color: rgb(241, 240, 237);
+        border-radius: 8px;
+    }
+    .buttons{
+        margin-left:  30px;
+        border: none;
+        width: 80px;
+        background-color: rgb(10, 8, 6);
+        height: 30px;
+        color: rgb(241, 240, 237);
+        border-radius: 8px;
+    }
+    .btn{
+        border: none;
+        width: 100px;
+        background-color: rgb(10, 8, 6);
+        height: 25px;
+        color: rgb(241, 240, 237);
+        border-radius: 8px;
+        margin-top: 20px;
+        text-align: center;
+        padding-top: 10px;
+        text-decoration: none;
+    }
+</style>
+<body>
+ <div id="controls">
+         <h2>product list</h2>
+        <input type="search" name="" id="search" placeholder="search by name">
+        <select id="sort">
+            <option value="">sort by</option>
+            <option value="low">price: low to high</option>
+            <option value="high">price : high to low</option>
+            <option value="az">name: A to Z</option>
+            <option value="za">name: Z to A</option>
+        </select>
+        <a class="btn" href="project.html">Add More</a>
+    </div>
+    
+
+    <br>
+    <div id="con">
+
+    </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem("data")) || []
+        let container = document.querySelector("#con")
+        function displayData(data) {
+            container.innerHTML = ""
+
+            data.forEach((el, i) => {
+                let div = document.createElement("div")
+                let name = document.createElement("h3")
+                name.innerText =el.name
+                let image = document.createElement("img")
+                image.src = el.image
+                let cat = document.createElement("h6")
+                cat.innerText = "category :" +el.cat
+                let price = document.createElement("h5")
+                price.innerText = " price: ₹ " + (el.price * el.qty)
+                let qty = document.createElement("h4")
+                qty.innerText = "qty: " + el.qty
+                let plus = document.createElement("button")
+                plus.innerText = "+"
+                plus.style.marginRight="10px"
+                plus.classList.add("color");
+                plus.addEventListener("click", () => {
+                    addition(i);
+                })
+                let minus = document.createElement("button")
+                minus.innerText = "-"
+                minus.classList.add("color")
+                minus.addEventListener("click", () => {
+                    minusdata(i);
+                })
+                let edit=document.createElement("button")
+                edit.innerHTML="Edit"
+                edit.style.marginRight="30px"
+                edit.classList.add("color")
+                edit.addEventListener("click",()=>{
+                    editdata(i)
+                })
+                let remove = document.createElement("button")
+                remove.innerText = "Remove"
+                remove.classList.add("buttons");
+                remove.addEventListener("click", () => {
+                    removedata(i)
+                })
+
+                div.append(image, cat, name, price, qty,edit, plus, minus,remove)
+                container.append(div)
+            });
+        }
+        document.querySelector("#search").addEventListener("input", function () {
+            let value = this.value.toLowerCase()
+
+            let filterd = cart.filter((el) => {
+                return el.name.toLowerCase().includes(value)
+            })
+
+            displayData(filterd)
+        })
+        document.querySelector("#sort").addEventListener("change",(e)=> {
+            let value=e.target.value
+            let sorted=[...cart]
+            if (value==="low") {
+        sorted.sort((a,b)=>a.price - b.price)
+            }
+            else if(value ==="high"){
+           sorted.sort((a,b) =>b.price-a.price)
+            }
+            else if (value ==="az") {
+             sorted.sort((a,b)=>a.name.localeCompare(b.name))
+            }
+            else if (value==="za") {
+            sorted.sort((a,b)=>b.name.localeCompare(a.name))
+            }
+
+            displayData(sorted)
+        })
+
+        displayData(cart)
+        function removedata(i) {
+            cart.splice(i, 1)
+            localStorage.setItem("data", JSON.stringify(cart))
+            location.reload();
+        }
+        function addition(i) {
+            cart[i].qty++
+            localStorage.setItem("data", JSON.stringify(cart))
+            location.reload()
+        }
+        function minusdata(i) {
+            if (cart[i].qty > 1) {
+                cart[i].qty--
+                localStorage.setItem("data", JSON.stringify(cart))
+                location.reload()
+            }
+        }
+           
+  function editdata(i) {
+     let newimage=prompt("image url",cart[i].image)
+  let newname = prompt("Enter new name:",cart[i].name);
+  let newcat = prompt("Enter new category:",cart[i].cat);
+  let newprice = prompt("Enter new price:",cart[i].price);
+
+  if (newname !== null && newcat!== null&&newprice!== null) {
+      cart[i].image=newimage
+    cart[i].name = newname;
+    cart[i].cat = newcat;
+    cart[i].price = newprice;
+
+    localStorage.setItem("data", JSON.stringify(cart));
+
+    location.reload();
+  }
+}
+
+
+
+    </script>
+</body>
+
+</html>
